@@ -139,5 +139,11 @@ public class PayStationImplTest {
                 10, ps.readDisplay());
     }
     
-    // Bryan Left a comment
+    /**
+     * Verify that empty returns the amount inserted so far
+     */
+    public void shouldReturnAmount() throws Exception{
+        ps.addPayment(5);
+        assertEquals("Empty should return amount inserted", 5, ps.empty());
+    }
 }
