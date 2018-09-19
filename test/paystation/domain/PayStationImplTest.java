@@ -11,6 +11,8 @@
  */
 package paystation.domain;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -22,6 +24,7 @@ public class PayStationImplTest {
     @Before
     public void setup() {
         ps = new PayStationImpl();
+        ps.initMap();
     }
 
     /**
@@ -126,7 +129,7 @@ public class PayStationImplTest {
 
     /**
      * Verify that cancel clears the pay station
-     */
+     *
     @Test
     public void shouldClearAfterCancel()
             throws IllegalCoinException {
@@ -138,12 +141,106 @@ public class PayStationImplTest {
         assertEquals("Insert after cancel should work",
                 10, ps.readDisplay());
     }
+    * /
     
     /**
      * Verify that empty returns the amount inserted so far
      */
+    @Test
     public void shouldReturnAmount() throws Exception{
         ps.addPayment(5);
         assertEquals("Empty should return amount inserted", 5, ps.empty());
+    }
+    
+    /**
+     * Verify that cancel does not effect empty
+     */
+    @Test
+    public void shouldNotChangeEmpty() throws Exception{
+        ps.addPayment(5);
+        ps.cancel();
+        assertEquals("Cancel should not change return value of empty", 5, ps.empty());
+    }
+    
+    /**
+     * Verify empty resets the total to 0
+     */
+    @Test
+    public void shouldResetTotal() throws Exception{
+        ps.addPayment(5);
+        ps.empty();
+        assertEquals("Empty should reset the total to 0", 0, ps.empty());
+    }
+    
+    /**
+     * Test that cancel returns a map containing one coin entered
+     *
+    @Test
+    public void shouldReturnOneCoin() throws Exception{
+        ps.addPayment(5);
+        ps.addPayment(10);
+        ps.addPayment(25);
+        Map<Integer, Integer> test = new HashMap<Integer, Integer>();
+        test.put(5, 1);
+        assertEquals("Cancel should return a map with one coin used", test, ps.cancel());
+    }
+    */
+    
+    /**
+     * Test that cancel can return a map of a mix of coins used
+     *
+    public void shouldReturnMix() throws Exception{
+        ps.addPayment(5);
+        ps.addPayment(10);
+        ps.addPayment(25);
+        Map<Integer, Integer> test = new HashMap<Integer, Integer>();
+        test.put(5, 1);
+        test.put(10, 1);
+        test.put(25, 1);
+        assertEquals("Cancel should return a map with one coin used", test, ps.cancel());
+    }
+    */
+    
+    /**
+     * Test that cancel does not return a map containing a key for a coin not used
+     */
+    public void shouldNotReturnUnused() throws Exception{
+        ps.addPayment(5);
+        ps.addPayment(10);
+        Map<Integer, Integer> test = new HashMap<Integer, Integer>();
+        test.put(5, 1);
+        test.put(10, 1);
+        test.put(25, 0);
+        assertEquals("Cancel should return a map with one coin used", test, ps.cancel());        
+    }
+    
+    /**
+     * Verify map is cleared after cancel
+     */
+    @Test
+    public void shouldClearMapCancel() throws Exception{
+        ps.addPayment(5);
+        ps.addPayment(10);
+        ps.addPayment(25);
+        Map<Integer, Integer> test = new HashMap<Integer, Integer>();
+        test.put(5,0);
+        test.put(10,0);
+        test.put(25,0);
+        assertEquals("Cancel should reset the map", test, ps.cancel());
+    }
+    
+    /**
+     * Verify that buy clears the map
+     */
+    public void shouldClearMapBuy() throws Exception{
+        ps.addPayment(5);
+        ps.addPayment(10);
+        ps.addPayment(25);
+        Map<Integer, Integer> test = new HashMap<Integer, Integer>();
+        test.put(5,0);
+        test.put(10,0);
+        test.put(25,0);
+        ps.buy();
+        assertEquals("Buy should clear the map", test, ps.getCoins());
     }
 }
