@@ -58,4 +58,10 @@ public class PayStationImpl implements PayStation {
     private void reset() {
         timeBought = insertedSoFar = 0;
     }
+    
+    public int empty(){
+        int total = insertedSoFar;
+        reset();
+        return total;
+    }
 }
