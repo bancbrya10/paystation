@@ -173,6 +173,7 @@ public class PayStationImplTest {
     }
     
     /**
+     * (*THIS TEST IS OBSOLETE*)
      * Test that cancel returns a map containing one coin entered
      *
     @Test
@@ -187,6 +188,7 @@ public class PayStationImplTest {
     */
     
     /**
+     * (*THIS TEST IS OBSOLETE*)
      * Test that cancel can return a map of a mix of coins used
      *
     public void shouldReturnMix() throws Exception{
